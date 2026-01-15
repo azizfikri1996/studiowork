@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudioWork - Creative Agency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #eaeaea;
+            background: #000; /* film studio background */
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo img.site-logo {
+            height: 88px; /* enlarged */
+            display: block;
+            object-fit: contain;
+        }
+
+        @media (max-width: 1024px) {
+            .logo img.site-logo { height: 72px; }
+        }
+
+        @media (max-width: 768px) {
+            .logo img.site-logo { height: 60px; }
+        }
+
+        .logo-fallback {
+            display: none;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.04em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #e6e6e6;
+            font-weight: 600;
+            transition: color 0.18s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.22s;
+            opacity: 0.08;
+        }
+
+        .nav-links a:hover::after { width: 100%; opacity: 0.14; }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 80vmax;
+            height: 80vmax;
+            left: -20vmax;
+            top: -30vmax;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), transparent 30%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 35%);
+            filter: blur(38px);
+            transform: rotate(0deg);
+            animation: floatBlob 12s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 60vmax;
+            height: 60vmax;
+            right: -15vmax;
+            bottom: -20vmax;
+            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.04), transparent 30%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 35%);
+            filter: blur(36px);
+            animation: floatBlob 16s ease-in-out infinite reverse;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        /* Three.js background container sits behind hero content */
+        #three-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+
+        /* Large split-title animation — two fixed lines */
+        .hero h1 {
+            font-size: clamp(3rem, 9.5vw, 7.2rem);
+            line-height: 0.98;
+            margin-bottom: 0.6rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: #0b0b0b;
+            overflow: visible;
+            display: block;
+            max-width: 90ch;
+            margin-left: auto;
+            margin-right: auto;
+            white-space: normal; /* allow explicit line breaks */
+            text-align: center;
+        }
+
+        .hero h1 .line {
+            display: block;
+            will-change: transform, opacity;
+        }
+
+        /* specific colors for each hero line (film studio look) */
+        .hero h1 .line1 { color: #ffffff; }
+        .hero h1 .line2 { color: #d6d6d6; text-shadow: 0 18px 36px rgba(0,0,0,0.6); }
+
+        /* ensure animated chars inherit line color */
+        .hero h1 .char { color: inherit; }
+
+        .hero h1 .char {
+            display: inline-block;
+            transform: translateY(10px);
+            opacity: 0;
+            animation: charIn 0.48s cubic-bezier(.2,.9,.3,1) forwards;
+        }
+
+        @keyframes charIn {
+            to { transform: translateY(0) rotateX(0); opacity: 1; }
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: #dcdcdc;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.4rem;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: 700;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            animation: fadeInUp 1s ease 0.4s both;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+        }
+
+        .cta-button:hover { transform: translateY(-4px); box-shadow: 0 18px 46px rgba(0,0,0,0.6); }
+
+        /* Services Section */
+        .services {
+            padding: 6rem 5%;
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 6rem 5%;
+            background: white;
+        }
+
+        /* Partner logos row */
+        .partner-row {
+            padding: 2.5rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            background: #fff; /* partner row on white */
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .partner-row img {
+            height: 40px;
+            opacity: 0.95;
+            transition: opacity 0.25s, transform 0.25s, filter 0.25s;
+            filter: none; /* show original logo colors on white background */
+            mix-blend-mode: normal;
+        }
+
+        .partner-row img:hover { opacity: 1; transform: translateY(-6px); filter: none; }
+
+        @keyframes floatBlob {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(8px) rotate(12deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portfolio-item {
+            position: relative;
+            height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.72) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-overlay h3 {
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(30,30,30,0.95) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content p {
+            font-size: 1.2rem;
+            line-height: 2;
+            opacity: 0.95;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 5%;
+            background: #f9f9f9;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #000;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-button {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(40,40,40,0.95) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.65);
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+                line-height: 1.05;
+                white-space: normal; /* allow wrapping on small screens */
+                word-spacing: 0.18rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><img src="/image/Studioworkputih.png" alt="SAA Logo" class="site-logo"></div>
+            <div class="logo">
+                <img src="/image/studiowork.png" alt="SAA Logo" class="site-logo" onerror="this.style.display='none'; this.parentNode.querySelector('.logo-fallback').style.display='flex'">
+                <div class="logo-fallback" aria-hidden="false">StudioWork</div>
+            </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Layanan</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#about">Tentang</a></li>
+            <li><a href="#contact">Kontak</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div id="three-bg"></div>
+        <div class="hero-content">
+            <h1>
+                <span class="line line1">Creative Agency</span>
+                <span class="line line2">untuk Brand Modern</span>
+            </h1>
+            <p>Kami membantu bisnis Anda berkembang dengan solusi digital yang inovatif dan kreatif</p>
+            <a href="#contact" class="cta-button">Mulai Konsultasi</a>
+        </div>
+    </section>
+
+    <!-- Partner logos (milestone-style) -->
+    <div class="partner-row" aria-hidden="true">
+        <img src="https://cdn.prod.website-files.com/67e7c2a30ecbafa28017e7fc/686293de15e5f6f36733bc74_de-keukenbladen-fabriek-logo-black-rgb.svg" alt="Logo 1">
+        <img src="https://cdn.prod.website-files.com/67e7c2a30ecbafa28017e7fc/686294f8657cf392af435ff1_realsuppe.avif" alt="Logo 2">
+        <img src="https://cdn.prod.website-files.com/67e7c2a30ecbafa28017e7fc/68d3fd1e834c6c3bd0f978bc_hoondert.svg" alt="Logo 3">
+        <img src="https://cdn.prod.website-files.com/67e7c2a30ecbafa28017e7fc/6862958597ca53f896776484_zonnepark-services-logo-horizontal-black-rgb.svg" alt="Logo 4">
+        <img src="https://cdn.prod.website-files.com/67e7c2a30ecbafa28017e7fc/686295dc1de4305c2155bd6f_helloprint-logo%201.svg" alt="Logo 5">
+    </div>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2 class="section-title">Layanan Kami</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3>Brand Design</h3>
+                <p>Menciptakan identitas visual yang kuat dan memorable untuk brand Anda dengan desain yang modern dan timeless</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💻</div>
+                <h3>Web Development</h3>
+                <p>Membangun website responsif dan cepat dengan teknologi terkini untuk pengalaman user yang optimal</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📱</div>
+                <h3>Digital Marketing</h3>
+                <p>Strategi marketing digital yang efektif untuk meningkatkan jangkauan dan engagement brand Anda</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🎬</div>
+                <h3>Content Creation</h3>
+                <p>Produksi konten berkualitas tinggi yang engaging dan sesuai dengan target audience Anda</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3>Social Media</h3>
+                <p>Mengelola dan mengembangkan presence social media Anda dengan strategi yang terukur</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>Growth Strategy</h3>
+                <p>Konsultasi strategis untuk pertumbuhan bisnis digital yang berkelanjutan dan terukur</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <h2 class="section-title">Portfolio Kami</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop" alt="Project 1">
+                <div class="portfolio-overlay">
+                    <h3>Brand Identity</h3>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=800&h=600&fit=crop" alt="Project 2">
+                <div class="portfolio-overlay">
+                    <h3>Web Design</h3>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=800&h=600&fit=crop" alt="Project 3">
+                <div class="portfolio-overlay">
+                    <h3>Digital Campaign</h3>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&h=600&fit=crop" alt="Project 4">
+                <div class="portfolio-overlay">
+                    <h3>App Development</h3>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1557838923-2985c318be48?w=800&h=600&fit=crop" alt="Project 5">
+                <div class="portfolio-overlay">
+                    <h3>Social Media</h3>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&h=600&fit=crop" alt="Project 6">
+                <div class="portfolio-overlay">
+                    <h3>Content Strategy</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2 class="section-title">Tentang Kami</h2>
+        <div class="about-content">
+            <p>StudioWork adalah creative agency yang berfokus pada solusi digital inovatif untuk brand modern. Kami percaya bahwa setiap brand memiliki cerita unik yang layak untuk diceritakan dengan cara yang menarik dan memorable.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">80+</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Team Members</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">Hubungi Kami</h2>
+        <div class="contact-content">
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nama</label>
+                    <input type="text" id="name" name="name" placeholder="Nama Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telepon</label>
+                    <input type="tel" id="phone" name="phone" placeholder="08XX-XXXX-XXXX">
+                </div>
+                <div class="form-group">
+                    <label for="message">Pesan</label>
+                    <textarea id="message" name="message" placeholder="Ceritakan tentang project Anda..." required></textarea>
+                </div>
+                <button type="submit" class="submit-button">Kirim Pesan</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#">📘</a>
+            <a href="#">📸</a>
+            <a href="#">🐦</a>
+            <a href="#">💼</a>
+        </div>
+        <p>&copy; 2026 StudioWork. All rights reserved. Made with ❤️ in Indonesia</p>
+    </footer>
+
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <script>
+        // Split hero title into two lines and animate per-word/per-char inside each line
+        (function splitTitle(){
+            const lines = document.querySelectorAll('.hero h1 .line');
+            // If user hasn't marked lines in HTML, try to split the raw h1 into two lines
+            if (!lines.length) {
+                const h = document.querySelector('.hero h1');
+                if (!h) return;
+                const parts = h.textContent.trim().split(/\s+untuk\s+/i);
+                // if contains the word 'untuk', split there; otherwise split at middle
+                let first = parts[0];
+                let second = parts[1] ? ('untuk ' + parts[1]) : '';
+                if (!second) {
+                    const words = first.split(/\s+/);
+                    const mid = Math.ceil(words.length/2);
+                    first = words.slice(0, mid).join(' ');
+                    second = words.slice(mid).join(' ');
+                }
+                h.innerHTML = '<span class="line line1"></span><span class="line line2"></span>';
+                lines[0] = h.querySelector('.line1');
+                lines[1] = h.querySelector('.line2');
+                lines[0].textContent = first;
+                lines[1].textContent = second;
+            }
+
+            // For each explicit line, wrap words then chars for controlled animation
+            Array.from(document.querySelectorAll('.hero h1 .line')).forEach((lineEl, li) => {
+                const text = lineEl.textContent.trim();
+                lineEl.textContent = '';
+                const words = text.split(/\s+/);
+                words.forEach((w, wi) => {
+                    const wordWrap = document.createElement('span');
+                    wordWrap.className = 'word';
+                    wordWrap.style.whiteSpace = 'nowrap';
+                    Array.from(w).forEach((ch, ci) => {
+                        const span = document.createElement('span');
+                        span.className = 'char';
+                        span.textContent = ch;
+                        // stagger first by line, then word, then char
+                        span.style.animationDelay = (li * 0.06 + wi * 0.04 + ci * 0.02) + 's';
+                        wordWrap.appendChild(span);
+                    });
+                    lineEl.appendChild(wordWrap);
+                    if (wi < words.length - 1) lineEl.appendChild(document.createTextNode(' '));
+                });
+            });
+        })();
+
+        // Intersection observer for reveal animations
+        (function revealOnScroll(){
+            const obs = new IntersectionObserver((entries, o) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('is-visible');
+                        o.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            document.querySelectorAll('.service-card, .portfolio-item, .stat-item, .partner-row img').forEach(el => {
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(18px)';
+                obs.observe(el);
+            });
+
+            document.addEventListener('transitionend', () => {});
+        })();
+
+        // Make observed items visible when flagged
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.is-visible').forEach(el => {
+                el.style.opacity = 1;
+                el.style.transform = 'none';
+            });
+
+            // No auto-fit applied: title uses explicit two lines defined in HTML/CSS
+        });
+
+        // Listen for observer events and toggle styles when class added
+        const mo = new MutationObserver(muts => {
+            muts.forEach(m => {
+                if (m.type === 'attributes' && m.attributeName === 'class') {
+                    const t = m.target;
+                    if (t.classList && t.classList.contains('is-visible')) {
+                        t.style.opacity = 1;
+                        t.style.transform = 'none';
+                    }
+                }
+            });
+        });
+        document.querySelectorAll('.service-card, .portfolio-item, .stat-item, .partner-row img').forEach(n => mo.observe(n, { attributes: true }));
+
+        // Form submission handler
+        const form = document.querySelector('.contact-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Terima kasih! Pesan Anda telah terkirim. Kami akan segera menghubungi Anda.');
+                this.reset();
+            });
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar shadow on scroll
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (!nav) return;
+            if (window.scrollY > 60) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+        });
+
+        // --- Three.js animated background for hero (stylized film camera) ---
+        (function initThreeBg(){
+            if (typeof THREE === 'undefined') return; // three.js not loaded
+            const container = document.getElementById('three-bg');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 2000);
+            camera.position.set(0, 8, 140);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.domElement.style.width = '100%';
+            renderer.domElement.style.height = '100%';
+            container.appendChild(renderer.domElement);
+
+            // Lights: two studio spotlights + soft ambient
+            const ambient = new THREE.AmbientLight(0xffffff, 0.12);
+            scene.add(ambient);
+            const spot1 = new THREE.SpotLight(0xffffff, 0.9);
+            spot1.position.set(120, 90, 80);
+            spot1.angle = Math.PI / 6;
+            spot1.penumbra = 0.3;
+            scene.add(spot1);
+            const spot2 = new THREE.SpotLight(0xffffff, 0.6);
+            spot2.position.set(-90, 70, 120);
+            spot2.angle = Math.PI / 5.5;
+            spot2.penumbra = 0.35;
+            scene.add(spot2);
+
+            // Camera body (stylized)
+            const bodyGeom = new THREE.BoxGeometry(34, 12, 14);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x030303, metalness: 0.7, roughness: 0.22 });
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            body.position.set(0, 0, 0);
+            scene.add(body);
+
+            // Lens (cylinder)
+            const lensGeom = new THREE.CylinderGeometry(4.0, 4.0, 8, 32);
+            const lensMat = new THREE.MeshStandardMaterial({ color: 0x050505, metalness: 0.9, roughness: 0.12 });
+            const lens = new THREE.Mesh(lensGeom, lensMat);
+            lens.rotation.z = Math.PI/2;
+            lens.position.set(21, 0, 0);
+            scene.add(lens);
+
+            // Film reels (top) — two torus shapes
+            const reelGeom = new THREE.TorusGeometry(6, 1.8, 16, 100);
+            const reelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, metalness: 0.95, roughness: 0.18 });
+            const reelL = new THREE.Mesh(reelGeom, reelMat);
+            reelL.position.set(-8, 7.2, 0);
+            reelL.rotation.x = Math.PI/2;
+            scene.add(reelL);
+            const reelR = new THREE.Mesh(reelGeom.clone(), reelMat.clone());
+            reelR.position.set(8, 7.2, 0);
+            reelR.rotation.x = Math.PI/2;
+            scene.add(reelR);
+
+            // subtle wireframe/highlight over reels for texture
+            const wire = new THREE.Mesh(reelGeom.clone(), new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.04 }));
+            wire.rotation.x = Math.PI/2;
+            wire.position.set(0, 7.2, 0);
+            scene.add(wire);
+
+            // Tripod hint (three thin cylinders) — minimal silhouette
+            const legGeom = new THREE.CylinderGeometry(0.6, 0.6, 36, 8);
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x050505, metalness: 0.3, roughness: 0.55 });
+            const leg1 = new THREE.Mesh(legGeom, legMat); leg1.position.set(-10, -18, -6); leg1.rotation.z = 0.25; scene.add(leg1);
+            const leg2 = leg1.clone(); leg2.position.set(10, -18, -6); leg2.rotation.z = -0.25; scene.add(leg2);
+            const leg3 = leg1.clone(); leg3.position.set(0, -18, 10); leg3.rotation.x = 0.25; scene.add(leg3);
+
+            // subtle fog for depth
+            scene.fog = new THREE.FogExp2(0x000000, 0.0009);
+
+            let time = 0;
+            function animate() {
+                time += 0.0075;
+
+                // rotate reels like film running
+                reelL.rotation.z = time * 2.2;
+                reelR.rotation.z = -time * 2.2;
+
+                // small body breathing and tilt
+                body.rotation.y = Math.sin(time * 0.18) * 0.03;
+                body.rotation.x = Math.sin(time * 0.09) * 0.02;
+
+                // orbit camera slowly to create cinematic parallax
+                const radius = 140;
+                camera.position.x = Math.cos(time * 0.06) * radius;
+                camera.position.y = 8 + Math.sin(time * 0.03) * 6;
+                camera.position.z = 80 + Math.sin(time * 0.05) * 60;
+                camera.lookAt(0, 0, 0);
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+
+            function onResize(){
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                renderer.setSize(w, h);
+                camera.aspect = w / (h || 1);
+                camera.updateProjectionMatrix();
+            }
+            window.addEventListener('resize', onResize);
+            onResize();
+            animate();
+        })();
+    </script>
+</body>
+</html>
