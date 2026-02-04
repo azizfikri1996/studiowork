@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Tools and build
+node_modules/
+dist/
+
+# Ignore editor files
+.vscode/
+
+# ffmpeg binary (if you prefer not to track large binaries)
+tools/ffmpeg/

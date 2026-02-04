@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OUR TEAM - STUDIO WORK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #ff0080;
+            --dark: #0a0a0a;
+            --light: #f5f5f5;
+            --accent: #6366f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Back Button Navigation */
+        .back-nav {
+            position: fixed;
+            top: 2rem;
+            left: 5%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-button {
+            width: 50px;
+            height: 50px;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .back-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* Header Logo */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: auto;
+            padding: 2rem 5%;
+            z-index: 999;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.05em;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 135px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 8rem;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(4rem, 12vw, 12rem);
+            font-weight: 700;
+            line-height: 0.9;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.6;
+            font-weight: 300;
+        }
+
+        /* Floating Grid Background */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.15) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.15) 2px, transparent 2px);
+            background-size: 50px 50px;
+            z-index: 0;
+            box-shadow: inset 0 0 100px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Team Grid Section */
+        .team {
+            min-height: 100vh;
+            padding: 10rem 5%;
+            position: relative;
+        }
+
+        .section-label {
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .team-member {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+
+        .team-member:hover::before {
+            opacity: 0.1;
+        }
+
+        .member-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-member:hover .member-image {
+            transform: scale(1.1);
+        }
+
+        .member-info {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .member-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .member-position {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .member-desc {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .member-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .member-social a {
+            width: 35px;
+            height: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .member-social a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Marquee Section */
+        .marquee-section {
+            padding: 4rem 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .marquee {
+            display: flex;
+            gap: 3rem;
+            animation: marquee 25s linear infinite;
+            width: max-content;
+        }
+
+        .marquee span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Values Section */
+        .values {
+            padding: 10rem 5%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(255, 0, 128, 0.05));
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-item {
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .value-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .value-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            color: var(--primary);
+            position: relative;
+            z-index: 2;
+        }
+
+        .value-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .value-desc {
+            font-size: 1rem;
+            line-height: 1.8;
+            opacity: 0.7;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Contact Section */
+        .contact {
+            min-height: 100vh;
+            padding: 10rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .contact-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, white, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-email {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+        }
+
+        .contact-email::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-email:hover::after {
+            transform: scaleX(1);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor, .cursor-follower {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 6rem;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .marquee span {
+                font-size: 2rem;
+            }
+
+            .contact-title {
+                font-size: 2.5rem;
+            }
+
+            .contact-email {
+                font-size: 1.3rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .back-nav {
+                left: 2rem;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Fade In Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Back Navigation -->
+    <div class="back-nav">
+        <a href="index2.html" class="back-button" title="Back to Home">←</a>
+    </div>
+
+    <!-- Header Logo -->
+    <header class="header">
+        <div class="logo">
+            <img src="image/studiowork_white.png" alt="Studio Work">
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="grid-bg"></div>
+        <div>
+            <h1 class="hero-title">
+                <span>OUR</span>
+                <span>TEAM</span>
+            </h1>
+            <p class="hero-subtitle">Creative Minds Behind Studio Work</p>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-section">
+        <div class="marquee">
+            <span>DESIGN EXCELLENCE</span>
+            <span>•</span>
+            <span>INNOVATION & CREATIVITY</span>
+            <span>•</span>
+            <span>COLLABORATIVE APPROACH</span>
+            <span>•</span>
+            <span>TECHNICAL EXPERTISE</span>
+            <span>•</span>
+            <span>CLIENT SATISFACTION</span>
+            <span>•</span>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <section class="team">
+        <div class="section-label fade-in">// MEET OUR EXPERTS</div>
+        <div class="team-grid">
+            <div class="team-member fade-in">
+                <img src="image/Team/HENNY1.jpg" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Henny</h3>
+                    <p class="member-position">Chief Executive Officer</p>
+                    <p class="member-desc">Saya ingin membangun Studiowork sebagai ruang kolaborasi yang melahirkan karya berdampak, tim yang bertumbuh, dan solusi yang relevan bagi masa depan.</p>
+                    <div class="member-social">
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member fade-in">
+                <img src="image/Team/JOVAN1.jpg" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Jovan</h3>
+                    <p class="member-position">General Staff</p>
+                    <p class="member-desc">Expert dalam user experience design dengan portfolio dari berbagai industri global.</p>
+                    <div class="member-social">
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member fade-in">
+                <img src="image/Team/GLENDY1.jpg" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Marcus Johnson</h3>
+                    <p class="member-position">Full Stack Developer</p>
+                    <p class="member-desc">Specialized dalam web development modern dengan expertise di React, Node.js & cloud technologies.</p>
+                    <div class="member-social">
+                        <a href="#">IN</a>
+                        <a href="#">GH</a>
+                        <a href="#">IG</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member fade-in">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Emma Wilson</h3>
+                    <p class="member-position">Brand Strategist</p>
+                    <p class="member-desc">Passionate tentang membangun brand identities yang memorable dan impactful.</p>
+                    <div class="member-social">
+                        <a href="#">IN</a>
+                        <a href="#">BE</a>
+                        <a href="#">IG</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member fade-in">
+                <img src="image/Team/HERU1.jpg" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Heru</h3>
+                    <p class="member-position">Project Manager</p>
+                    <p class="member-desc">Expert dalam project management dan client relations dengan track record excellent delivery.</p>
+                    <div class="member-social">
+                        <a href="#">IN</a>
+                        <a href="#">LI</a>
+                        <a href="#">IG</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member fade-in">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Lisa Martinez</h3>
+                    <p class="member-position">Content Strategist</p>
+                    <p class="member-desc">Specialist dalam content creation dan digital marketing dengan creative storytelling approach.</p>
+                    <div class="member-social">
+                        <a href="#">IN</a>
+                        <a href="#">BE</a>
+                        <a href="#">IG</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values">
+        <div class="section-label fade-in">// OUR VALUES</div>
+        <div class="values-grid">
+            <div class="value-item fade-in">
+                <div class="value-icon">💡</div>
+                <h3 class="value-title">Innovation</h3>
+                <p class="value-desc">Kami selalu mencari cara baru dan lebih baik untuk menyelesaikan masalah dengan teknologi terkini.</p>
+            </div>
+            <div class="value-item fade-in">
+                <div class="value-icon">🤝</div>
+                <h3 class="value-title">Collaboration</h3>
+                <p class="value-desc">Bekerja sama dalam tim yang solid untuk mencapai hasil terbaik bagi setiap project.</p>
+            </div>
+            <div class="value-item fade-in">
+                <div class="value-icon">⭐</div>
+                <h3 class="value-title">Excellence</h3>
+                <p class="value-desc">Komitmen terhadap kualitas tertinggi dalam setiap aspek pekerjaan kami.</p>
+            </div>
+            <div class="value-item fade-in">
+                <div class="value-icon">🚀</div>
+                <h3 class="value-title">Growth</h3>
+                <p class="value-desc">Terus belajar dan berkembang untuk memberikan nilai lebih kepada klien dan industri.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="contact-content">
+            <h2 class="contact-title fade-in">Ready to Work Together?</h2>
+            <a href="mailto:hello@studiowork.com" class="contact-email fade-in">hello@studiowork.com</a>
+            <div class="social-links fade-in">
+                <a href="#" class="social-link">IN</a>
+                <a href="#" class="social-link">BE</a>
+                <a href="#" class="social-link">DR</a>
+                <a href="#" class="social-link">IG</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div>&copy; 2026 Studio Work. All rights reserved.</div>
+        <div>Designed & Developed with passion</div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        if (window.innerWidth > 1024) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+
+                setTimeout(() => {
+                    cursorFollower.style.left = e.clientX + 'px';
+                    cursorFollower.style.top = e.clientY + 'px';
+                }, 100);
+            });
+
+            // Cursor interactions
+            const interactiveElements = document.querySelectorAll('a, button, .team-member, .value-item');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+                });
+            });
+        }
+
+        // Fade in animations
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElements.forEach(el => observer.observe(el));
+
+        // Parallax effect on hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const hero = document.querySelector('.hero-title');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                hero.style.opacity = 1 - scrolled / 600;
+            }
+        });
+    </script>
+</body>
+</html>
